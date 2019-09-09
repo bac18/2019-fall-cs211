@@ -5,6 +5,7 @@
 #include <ctime>
 #include <vector>
 #include "curses.h"
+#include "panel.h"
 
 using namespace std;
 
@@ -14,31 +15,49 @@ int main(int argc, char ** argv)
 	noecho();
 	keypad(stdscr, TRUE);
 
-	int height = 30;
-	int width = 120;
-	int starty = 0;
-	int startx = 0;
-
-	WINDOW* win = newwin(height, width, starty, startx);
-	refresh();
-	box(win, 0, 0);
-	wrefresh(win);
-
-	int curs_x = 1;
-	int curs_y = 1;
-	move(curs_y, curs_x);
-	refresh();
-
+	int cursor_x = 0;
+	int cursor_y = 0;
+	move(cursor_y, cursor_x);
+	
 	while (true)
 	{
-		getch();
-		curs_x++;
-		move(curs_y, curs_x);
-		refresh();
+		int c = getch();
+
+		if (c == KEY_RIGHT)
+		{
+			if (cursor_x < COLS - 1)
+				move(cursor_y, ++cursor_x);
+		}
+		else if (c == KEY_LEFT)
+		{
+			if (cursor_x > 0)
+				move(cursor_y, --cursor_x);
+		}
+		else if (c == KEY_DOWN)
+		{
+			if (cursor_y < LINES - 1)
+				move(++cursor_y, cursor_x);
+		}
+		else if (c == KEY_UP)
+		{
+			if (cursor_y > 0)
+				move(--cursor_y, cursor_x);
+		}
+		else
+		{
+			if (cursor_x < COLS - 1)
+				move(cursor_y, ++cursor_x);
+		}
 	}
 
-	getch();
 
+
+
+
+
+
+
+	getch();
 	endwin();
 	return 0;
 }
