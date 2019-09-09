@@ -11,23 +11,28 @@ using namespace std;
 
 int main(int argc, char ** argv)
 {
-	initscr();				// initializes the screen, sets up memory
+	WINDOW* main_window = nullptr;
+
+	main_window = initscr();				// initializes the screen, sets up memory
+	start_color();
 	noecho();
+	keypad(main_window, TRUE);
 	keypad(stdscr, TRUE);
 
-
+	int opt_height = 1;
+	int opt_width = 10;
 	mvhline(0, 0, '-', COLS);
 	mvhline(2, 0, '-', COLS);
-	int opt_width = 7;
 	for (int i = 0; i < 21; i++)
-	{
-		mvvline(1, opt_width * i, '|', 1);
-	}
+		mvvline(opt_height, opt_width * i, '|', 1);
 
-	string menu_options[3] = { "File", "Edit", "View" };
-	for (int i = 0; i < 3; i++)
+	const int num_of_options = 5;
+	string menu_options[num_of_options] = { "File", "Edit", "View", "Format", "Help" };
+
+	for (int i = 0; i < num_of_options; i++)
 	{
-		mvprintw(1, (opt_width * i) + 2, menu_options[i].c_str());
+		mvprintw(1, (opt_width * i) + (opt_width / 3), menu_options[i].c_str());
+		refresh();
 	}
 
 	int cursor_x = 0;
@@ -35,7 +40,7 @@ int main(int argc, char ** argv)
 	move(cursor_y, cursor_x);
 
 	refresh();
-	
+
 	while (true)
 	{
 		int c = getch();
@@ -57,8 +62,14 @@ int main(int argc, char ** argv)
 		}
 		else if (c == KEY_UP)
 		{
-			if (cursor_y > 0)
+			if (cursor_y > 3)
 				move(--cursor_y, cursor_x);
+		}
+		else if (c == KEY_BACKSPACE)
+		{
+			move(cursor_y, --cursor_x);
+			addch('<');
+			refresh();
 		}
 		else
 		{
@@ -73,15 +84,10 @@ int main(int argc, char ** argv)
 				move(++cursor_y, cursor_x);
 				addch(c);
 			}
+
+		refresh();
 		}
 	}
-
-
-
-
-
-
-
 
 	getch();
 	endwin();
