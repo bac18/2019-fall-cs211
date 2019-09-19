@@ -6,8 +6,9 @@
 #include <vector>
 #include "curses.h"
 #include "panel.h"
-
 using namespace std;
+
+void show_page(WINDOW* win, vector<vector<vector<int>>> pages_vect, int page_number);
 
 int main(int argc, char ** argv)
 {
@@ -34,12 +35,8 @@ int main(int argc, char ** argv)
 
 	int opt_height = 1;
 	int opt_width = 10;
-	/*mvhline(0, 1, '-', COLS - 1);
-	mvhline(2, 1, '=', COLS - 1);*/
 	for (int i = 0; i < 21; i++)
 		mvvline(opt_height, opt_width * i, '|', 1);
-	/*mvvline(0, 0, '|', LINES);*/
-
 
 	const int num_of_options = 5;
 	string menu_options[num_of_options] = { "File", "Edit", "View", "Format", "Help" };
@@ -53,10 +50,13 @@ int main(int argc, char ** argv)
 		refresh();
 	}
 
+	vector<vector<vector<int>>> pages;
+
 	int cursor_x = 1;
 	int cursor_y = 4;
 	move(cursor_y, cursor_x);
 	refresh();
+	pages.push_back({});
 
 	while (true)
 	{
@@ -82,15 +82,46 @@ int main(int argc, char ** argv)
 			if (cursor_y > 4)
 				move(--cursor_y, cursor_x);
 		}
+		else if (c == ALT_0)
+		{
+			pages.push_back({});	// create new page of 45 lines
+			mvwprintw(main_window, 30, 12, "%d", pages.size());
+		}
+		else if (c == ALT_1)
+		{
+			// go to next page
+		}
 		else if (c == KEY_DC)
 		{
 			if (cursor_x > 1)
+			{
 				move(cursor_y, --cursor_x);
-			delch();
+				delch();
+				move(cursor_y, COLS - 2);
+				delch();
+				mvaddch(cursor_y, COLS - 1, '|');                // reprint border wall after deleting
+				move(cursor_y, cursor_x);
+			}
+			else if (cursor_x == 1)
+			{
+				move(--cursor_y, COLS);
+			}
+
 		}
 		else
 		{
-			if (cursor_x < COLS - 2)
+			vector<int> here;
+
+			int c = getch();
+
+			here.push_back(c);
+
+			for (int i = 0; i < here.size(); i++)
+			{
+				mvwprintw(main_window, 1, 1, "%d", c);
+			}
+
+			/*if (cursor_x < COLS - 2)
 			{
 				addch(c);
 				move(cursor_y, ++cursor_x);
@@ -100,12 +131,25 @@ int main(int argc, char ** argv)
 				cursor_x = 0;
 				move(++cursor_y, cursor_x);
 				addch(c);
-			}
-		refresh();
+			}*/
 		}
+		// show_vectors() function
+
+		wrefresh(main_window);
+		refresh();
 	}
 
 	getch();
 	endwin();
 	return 0;
+}
+
+
+
+void show_page(WINDOW* win, vector<vector<vector<int>>> pages_vect, int page_number)
+{
+	for (int i = 0; i < 45; i++)
+	{
+		mvwprintw(win, 0, 0, "%d", pages_vect[page_number][i]);
+	}
 }
