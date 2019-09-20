@@ -73,8 +73,9 @@ int main(int agrc, char* argv[])
 				wrefresh(main_window);
 			}
 			break;
-		case KEY_SUP:
+		case KEY_SDOWN:
 			WINDOW *temp_win = newwin(3, 30, 27, 50);
+			keypad(temp_win, TRUE);
 			box(temp_win, '|', '-');
 			wrefresh(temp_win);
 
@@ -84,17 +85,35 @@ int main(int agrc, char* argv[])
 
 			vector<char> file_name;
 
-			int c = wgetch(temp_win);
-			while (c != ALT_DOWN)
+			temp_win_cursx += 11;
+			int c = mvwgetch(temp_win, temp_win_cursy, temp_win_cursx);
+			while (c != KEY_SUP)
 			{
 				mvwaddch(temp_win, temp_win_cursy, temp_win_cursx++, c);
+				file_name.push_back(c);
 
 				c = wgetch(temp_win);
 			}
 
+			string sfile_name(file_name.begin(), file_name.end());
+
 			werase(temp_win);
 			wrefresh(temp_win);
 			delwin(temp_win);
+
+			string output;
+			ifstream infile;
+			infile.open(sfile_name);
+			if (infile.is_open())
+			{
+				while (getline(infile, output))
+				{
+					mvwprintw(main_window, main_win_cursy++, main_win_cursx, output.c_str());
+				}
+			}
+			infile.close();
+
+			
 
 			break;
 		}
