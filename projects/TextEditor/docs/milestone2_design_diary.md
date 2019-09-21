@@ -12,3 +12,5 @@ have to refactor my code once again to be compatible with the main window instea
 All in all, I think this milestone was successful in that I figured out the problems I was having and solved them
 in due time. It wasn't a struggle conceptually, but syntacticly and trying to type the right things to make what I
 want to happen, happen.
+
+Link to GIF:		https://github.com/bac18/2019-fall-cs211/blob/e931b68c1ea522a98c73f50857b11e83ed713794/Milestone2GIF.gif

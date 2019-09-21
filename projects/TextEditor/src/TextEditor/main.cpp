@@ -215,13 +215,13 @@ int main(int argc, char* argv[])
 					temp_win_vect_index++;
 				}
 
-				main_win_cursx = 30;                            //-------
-				main_win_cursy = 10;
-				for (int i = 0; i < file_name.size(); i++)				// for testing purposes; prints current vector in main_window
-				{
-					mvwaddch(main_window, main_win_cursy, main_win_cursx++, file_name[i]);
-					wrefresh(main_window);
-				}												//-------
+				//main_win_cursx = 30;                            //-------
+				//main_win_cursy = 10;
+				//for (int i = 0; i < file_name.size(); i++)				// for testing purposes; prints current vector in main_window
+				//{
+				//	mvwaddch(main_window, main_win_cursy, main_win_cursx++, file_name[i]);
+				//	wrefresh(main_window);
+				//}												//-------
 
 				c = wgetch(temp_window);
 			}
